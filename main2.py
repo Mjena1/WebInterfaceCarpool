@@ -9,7 +9,6 @@ import time
 import pandas as pd
 import to_office,to_office_google_api
 import to_home,to_home_google_api
-from plot_gmap_helper import plot as plt
 from plot import plot as pltFolium
 
 # Load API key from .env file
