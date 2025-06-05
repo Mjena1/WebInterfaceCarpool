@@ -1,3 +1,4 @@
+
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
@@ -6,14 +7,15 @@ import os
 from dotenv import load_dotenv
 import time
 import pandas as pd
-import to_office,to_office_google_api
-import to_home,to_home_google_api
-from plot import plot as pltFolium
+import to_office_google_api
+import to_home_google_api
+from plotTo import plot as pltTo
+from plotFrom import plot as pltFrom
 
 # Load API key from .env file
 load_dotenv()
+# api_key = os.getenv('api_key')
 api_key = st.secrets['api_key']
-
 
 # Hardcoded credentials for admin
 ADMIN_EMAIL = "admin@admin.com"
@@ -101,27 +103,41 @@ def demo_to_office():
 
     # Initialize session state
     if "companion_name" not in st.session_state:
-        st.session_state.companion_name = ""
-        st.session_state.companion_location = ""
-        st.session_state.office_location = ""
-        st.session_state.num_drivers = 1
+        st.session_state.companion_name = "Manab"
+        st.session_state.companion_location = "Zolo Arena"
+        st.session_state.office_location = "Brigade Tech Gardens, Bangalore"
+        st.session_state.num_drivers = 2
         st.session_state.show_map = False
+        default_drivers = [
+            ("Sundar Sri", "Nallur Halli Metro Station,Bangalore", 3),
+            ("Abhijit Balan", "Marathahalli Bridge", 2),
+            ("Tarun Chintapalli", "Sarjapura ,Bangalore", 2),
+            ("Jay Gupta", "Indiranagar Metro station, Bangalore", 3),
+            ("Kishore K", "HopeFarm,Bangalore", 2)
+        ]
         for i in range(1, 6):
-            st.session_state[f'driver_{i}_name'] = ""
-            st.session_state[f'driver_{i}_location'] = ""
-            st.session_state[f'driver_{i}_capacity'] = 1
+            st.session_state[f'driver_{i}_name'] = default_drivers[i-1][0]
+            st.session_state[f'driver_{i}_location'] = default_drivers[i-1][1]
+            st.session_state[f'driver_{i}_capacity'] = default_drivers[i-1][2]
 
     # Function to clear all input fields
     def clear_fields():
-        st.session_state.companion_name = ""
-        st.session_state.companion_location = ""
-        st.session_state.office_location = ""
-        st.session_state.num_drivers = 1
+        st.session_state.companion_name = "Manab"
+        st.session_state.companion_location = "Zolo Arena"
+        st.session_state.office_location = "Brigade Tech Gardens, Bangalore"
+        st.session_state.num_drivers = 2
         st.session_state.show_map = False
+        default_drivers = [
+            ("Sundar Sri", "Nallur Halli Metro Station,Bangalore", 3),
+            ("Abhijit Balan", "Marathahalli Bridge", 2),
+            ("Tarun Chintapalli", "Sarjapura ,Bangalore", 2),
+            ("Jay Gupta", "Indiranagar Metro station, Bangalore", 3),
+            ("Kishore K", "HopeFarm,Bangalore", 2)
+        ]
         for i in range(1, 6):
-            st.session_state[f'driver_{i}_name'] = ""
-            st.session_state[f'driver_{i}_location'] = ""
-            st.session_state[f'driver_{i}_capacity'] = 1
+            st.session_state[f'driver_{i}_name'] = default_drivers[i-1][0]
+            st.session_state[f'driver_{i}_location'] = default_drivers[i-1][1]
+            st.session_state[f'driver_{i}_capacity'] = default_drivers[i-1][2]
 
     # Sidebar inputs
     with st.sidebar:
@@ -237,7 +253,7 @@ def demo_from_office():
     # --- Check for results display FIRST ---
     if st.session_state.show_results and st.session_state.algorithm_output:
         locations, assignments, driver_paths, total_time = st.session_state.algorithm_output
-        display_results_interface(locations, assignments, driver_paths, total_time)
+        display_results_interface1(locations, assignments, driver_paths, total_time)
         return # IMPORTANT: Stop execution here if results are displayed
     
     
@@ -246,29 +262,47 @@ def demo_from_office():
 
     # Initialize session state
     if "num_companions" not in st.session_state:
-        st.session_state.office_location = ""
-        st.session_state.num_companions = 1
-        st.session_state.num_drivers = 1
+        st.session_state.office_location = "Brigade Tech Gardens, Bangalore"
+        st.session_state.num_companions = 3
+        st.session_state.num_drivers = 2
         st.session_state.show_map = False
-        for i in range(1, 6):
-            st.session_state[f'companion_{i}_name'] = ""
-            st.session_state[f'companion_{i}_location'] = ""
-            st.session_state[f'driver_{i}_name'] = ""
-            st.session_state[f'driver_{i}_location'] = ""
-            st.session_state[f'driver_{i}_capacity'] = 1
 
-    # Function to clear all input fields
-    def clear_fields():
-        st.session_state.office_location = ""
-        st.session_state.num_companions = 1
-        st.session_state.num_drivers = 1
-        st.session_state.show_map = False
+        default_companions = [
+            ("Manab", "Zolo Arena, Bangalore"),
+            ("Rohith", "Munnekolal,Bangalore"),
+            ("Sayan", "Kundalhali Railway Station,Bangalore"),
+            ("Aman", "DMart, Siddapura,Bangalore"),
+            ("Hitesh", "EcoSpace , Bellandur,Bangalore")
+        ]
+
+        default_drivers = [
+            ("Sundar Sri", "Nallur Halli Metro Station,Bangalore", 3),
+            ("Abhijit Balan", "Marathahalli Bridge", 2),
+            ("Tarun Chintapalli", "Sarjapura ,Bangalore", 2),
+            ("Jay Gupta", "Indiranagar Metro station, Bangalore", 3),
+            ("Kishore K", "HopeFarm,Bangalore", 2)
+        ]
+
         for i in range(1, 6):
-            st.session_state[f'companion_{i}_name'] = ""
-            st.session_state[f'companion_{i}_location'] = ""
-            st.session_state[f'driver_{i}_name'] = ""
-            st.session_state[f'driver_{i}_location'] = ""
-            st.session_state[f'driver_{i}_capacity'] = 1
+            st.session_state[f'companion_{i}_name'] = default_companions[i-1][0]
+            st.session_state[f'companion_{i}_location'] = default_companions[i-1][1]
+            st.session_state[f'driver_{i}_name'] = default_drivers[i-1][0]
+            st.session_state[f'driver_{i}_location'] = default_drivers[i-1][1]
+            st.session_state[f'driver_{i}_capacity'] = default_drivers[i-1][2]
+
+
+        # Function to clear all input fields
+        def clear_fields():
+            st.session_state.office_location = "Brigade Tech Gardens, Bangalore"
+            st.session_state.num_companions = 3
+            st.session_state.num_drivers = 2
+            st.session_state.show_map = False
+            for i in range(1, 6):
+                st.session_state[f'companion_{i}_name'] = default_companions[i-1][0]
+                st.session_state[f'companion_{i}_location'] = default_companions[i-1][1]
+                st.session_state[f'driver_{i}_name'] = default_drivers[i-1][0]
+                st.session_state[f'driver_{i}_location'] = default_drivers[i-1][1]
+                st.session_state[f'driver_{i}_capacity'] = default_drivers[i-1][2]
 
     # Sidebar inputs
     with st.sidebar:
@@ -401,11 +435,41 @@ def display_results_interface(locations, assignments, driver_paths, algorithm_ti
 
     st.markdown("### Optimized Routes Map")
     
-    m = pltFolium(locations ,assignments , driver_paths)
+    m = pltTo(locations ,assignments , driver_paths)
     if m is not None:
-        st_folium(m, width=1200, height=800)
+        st_folium(m, width=1000, height=600)
     else:
-        st.error("Map could not be generated. Ensure 'pltFolium' function works correctly and returns a Folium map object.")
+        st.error("Map could not be generated. Ensure 'pltTo' function works correctly and returns a Folium map object.")
+
+    st.markdown("---")
+
+    st.markdown("### Carpooling Assignments")
+    if assignments:
+        assignment_data = []
+        for driver, companions_data in assignments.items():
+            for companion_name, _ in companions_data:
+                assignment_data.append({"Driver": driver, "Companion": companion_name})
+        
+        df_assignments = pd.DataFrame(assignment_data)
+        st.table(df_assignments)
+    else:
+        st.info("No assignments were generated. Check your algorithm and inputs.")
+
+    st.markdown("---")
+
+    st.markdown("### Algorithm Performance")
+    st.write(f"**Time taken to run the algorithm:** {algorithm_time:.4f} seconds")
+
+def display_results_interface1(locations, assignments, driver_paths, algorithm_time):
+    st.markdown("<h1 style='text-align: center;'>🗺️ Carpooling Results Map</h1>", unsafe_allow_html=True)
+
+    st.markdown("### Optimized Routes Map")
+    
+    m = pltFrom(locations ,assignments , driver_paths)
+    if m is not None:
+        st_folium(m, width=1000, height=600)
+    else:
+        st.error("Map could not be generated. Ensure 'pltFrom' function works correctly and returns a Folium map object.")
 
     st.markdown("---")
 
