@@ -9,7 +9,7 @@ from branca.element import Template, MacroElement
 
 # Load API Key from environment variables
 load_dotenv()
-api_key = os.getenv('api_key')
+api_key = st.secrets['api_key']
 
 def get_lat_lon(address, api_key):
     """
