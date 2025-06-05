@@ -6,6 +6,7 @@ import polyline
 import folium
 from folium.plugins import BeautifyIcon, MarkerCluster
 from branca.element import Template, MacroElement
+import streamlit as st
 
 # Load API Key from environment variables
 load_dotenv()
