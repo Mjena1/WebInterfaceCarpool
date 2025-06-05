@@ -1,4 +1,4 @@
-
+qw
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
@@ -13,7 +13,7 @@ from plot import plot as pltFolium
 
 # Load API key from .env file
 load_dotenv()
-api_key = os.getenv('api_key')
+api_key = st.secrets['api_key']
 
 
 # Hardcoded credentials for admin
