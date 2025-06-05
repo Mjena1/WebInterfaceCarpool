@@ -8,7 +8,7 @@ import os
 
 load_dotenv()
 
-api_key = os.getenv('api_key')
+api_key = st.secrets['api_key']
 
 #*********************************** Google Map Api Functions ***************************************
 def get_directions(origin, destination, api_key):
