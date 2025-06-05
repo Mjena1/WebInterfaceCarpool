@@ -142,7 +142,7 @@ def find_best_intersection_node(
         for lat_lon, _ in top_5_nodes:
            
 
-            road_distance_companion_intersection, travel_time_companion_intersection = get_directions_companion(api_key, companion_lat_lon, lat_lon)
+            road_distance_companion_intersection, travel_time_companion_intersection = get_directions_companion(api_key, companion_lat_lon, lat_lon,mode="driving")
             road_distance_driver_intersection, travel_time_driver_intersection = get_directions_companion(api_key,driver_paths[driver_label][0], lat_lon,mode="driving")
             # print(travel_time_companion_intersection)
 
