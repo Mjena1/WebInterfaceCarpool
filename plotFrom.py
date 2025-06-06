@@ -99,8 +99,8 @@ def plot(locations, assignments, driver_paths):
             # Get distance and duration
             url = "https://maps.googleapis.com/maps/api/directions/json"
             params = {
-                'origin': f"{companion_coord[0]},{companion_coord[1]}",
-                'destination': f"{meeting_point[0]},{meeting_point[1]}",
+                'origin': f"{meeting_point[0]},{meeting_point[1]}",
+                'destination': f"{companion_coord[0]},{companion_coord[1]}",
                 'key': api_key,
                 'mode': 'walking'
             }
